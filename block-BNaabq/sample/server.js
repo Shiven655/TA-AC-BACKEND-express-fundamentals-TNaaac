@@ -4,16 +4,15 @@ var logger = require('morgan');
 var app = express();
 
 app.use(logger('dev'));
-app.use(cookieparser);
+app.use(cookieparser());
+
 app.use((req, res, next) => {
   console.log(req.cookies);
-  let count = req.cookies.count;
-  if (count) {
-    res.cookie('count', Number(count) + 1);
-  } else {
-    res.cookie('count', 1);
-  }
-  next();
+});
+
+app.use('about', (req, res, next) => {
+  res.cookie('username', 'Shiven');
+  res.end('About Page');
 });
 
 app.get('/', (req, res) => {
