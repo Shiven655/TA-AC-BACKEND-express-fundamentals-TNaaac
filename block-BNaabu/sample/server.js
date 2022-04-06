@@ -2,7 +2,7 @@ var express = require('express');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var app = express();
-
+//middlewares
 app.use(logger('dev'));
 app.use(cookieParser());
 app.use(express.json());
@@ -19,11 +19,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  if (req.url === 'admin') {
-    return next('unauthorized');
-  }
-  next();
+app.use('/admin', (req, res, next) => {
+  next('Unauthorized');
 });
 
 //route
@@ -33,9 +30,13 @@ app.get('/', (req, res) => {
 app.get('/about', (req, res) => {
   res.send('WELCOME TO ABOUT PAGE');
 });
-
-app.use((err, req, res, next) => {
+//404 error
+app.use((req, res, next) => {
   res.send('404 Page not found');
+});
+//custom error
+app.use((err, req, res, next) => {
+  res.status(500).send(err);
 });
 
 app.listen(4000, () => {
